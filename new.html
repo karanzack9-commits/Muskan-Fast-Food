@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muskan Fast Food - Order Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff3366 0%, #ff9966 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #ff3366, #ff9966);
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #ff3366;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .logo i {
+            color: #ff9966;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .slogan {
+            font-style: italic;
+            color: #ff3366;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        .user-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .user-info input {
+            padding: 10px 15px;
+            border: 2px solid #ff9966;
+            border-radius: 50px;
+            font-size: 1rem;
+            width: 250px;
+            margin-right: 10px;
+        }
+        
+        .user-info button {
+            padding: 10px 20px;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .food-items-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 153, 102, 0.2);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #ff3366;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .section-title i {
+            font-size: 1.5rem;
+        }
+        
+        .food-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .category-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #ff9966;
+            color: #ff3366;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: linear-gradient(to right, #ff3366, #ff9966);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+            border-color: #ff3366;
+        }
+        
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .food-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #ffebee;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .food-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 51, 102, 0.2);
+            border-color: #ff9966;
+        }
+        
+        .food-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background: linear-gradient(45deg, #ffebee, #ffcdd2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3366;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .food-img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 51, 102, 0.1) 100%);
+        }
+        
+        .food-info {
+            padding: 20px;
+        }
+        
+        .food-name {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+        }
+        
+        .food-price {
+            color: #ff3366;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .food-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            min-height: 40px;
+        }
+        
+        .food-details {
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .food-details div {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .food-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            background: #ffebee;
+            border-radius: 50px;
+            padding: 5px;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .qty-btn {
+            background: white;
+            border: 1px solid #ff9966;
+            color: #ff3366;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .qty-btn:hover {
+            background: #ff3366;
+            color: white;
+            border-color: #ff3366;
+        }
+        
+        .qty-value {
+            margin: 0 15px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .add-to-cart {
+            background: linear-gradient(to right, #ff3366, #ff9966);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+        }
+        
+        .cart-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 153, 102, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 30px;
+        }
+        
+        .cart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .clear-cart {
+            background: #ffebee;
+            color: #ff3366;
+            border: 1px solid #ff9966;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .clear-cart:hover {
+            background: #ff3366;
+            color: white;
+        }
+        
+        .cart-items {
+            margin: 25px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 2px dashed #ffebee;
+        }
+        
+        .cart-item-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .cart-item-price {
+            color: #ff3366;
+            font-weight: 700;
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .remove-item {
+            background: #ffebee;
+            color: #ff3366;
+            border: 1px solid #ff9966;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .remove-item:hover {
+            background: #ff3366;
+            color: white;
+        }
+        
+        .cart-summary {
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px dashed #ff9966;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff3366;
+            border-top: 2px solid #ffcdd2;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(to right, #ff3366, #ff9966);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .checkout-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.4);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ff9966;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #ffebee;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ff3366, #ff9966);
+            border-radius: 10px;
+        }
+        
+        /* Bill receipt styling */
+        .bill-receipt {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid #ff3366;
+        }
+        
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px dashed #ff9966;
+            padding-bottom: 20px;
+        }
+        
+        .receipt-header h3 {
+            color: #ff3366;
+            font-size: 2rem;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .receipt-details {
+            margin-bottom: 25px;
+        }
+        
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ffcdd2;
+        }
+        
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px dashed #ff9966;
+            color: #ff3366;
+        }
+        
+        .receipt-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .thank-you {
+            color: #ff3366;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .tokens-earned {
+            background: linear-gradient(to right, #ffd700, #ffed4e);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+            font-weight: 600;
+            border: 2px dashed #ff9900;
+        }
+        
+        .tokens-earned i {
+            color: #ff9900;
+            margin-right: 10px;
+        }
+        
+        .user-mobile {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0fff0;
+            border-radius: 10px;
+            border: 1px solid #4CAF50;
+        }
+        
+        @media (max-width: 768px) {
+            .food-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .user-info input {
+                width: 100%;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-container {
+                gap: 20px;
+            }
+            
+            .food-items-section, .cart-section {
+                padding: 20px;
+            }
+        }
+        
+        .special-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff3366;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .order-success {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .order-success i {
+            font-size: 4rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .order-success h3 {
+            color: #ff3366;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Muskan Fast Food</h1>
+                <i class="fas fa-pizza-slice"></i>
+            </div>
+            <p class="tagline">Taste that brings a smile to your face!</p>
+            <p class="slogan">"Muskurahat ka swaad, har bite mein!"</p>
+            
+            <div class="user-info">
+                <input type="text" id="userName" placeholder="Your Name">
+                <input type="tel" id="userMobile" placeholder="Mobile Number" maxlength="10">
+                <button id="saveUserInfo">Save Info</button>
+            </div>
+        </header>
+        
+        <div class="dashboard-container">
+            <main class="food-items-section">
+                <h2 class="section-title">
+                    <i class="fas fa-burger"></i> 
+                    Our Special Menu
+                </h2>
+                
+                <div class="food-categories">
+                    <button class="category-btn active" data-category="all">All Items</button>
+                    <button class="category-btn" data-category="burger">Burger</button>
+                    <button class="category-btn" data-category="chowmein">Chowmein</button>
+                    <button class="category-btn" data-category="manchurian">Manchurian</button>
+                    <button class="category-btn" data-category="chaat">Chaat</button>
+                    <button class="category-btn" data-category="momos">Momos</button>
+                    <button class="category-btn" data-category="pasta">Pasta</button>
+                </div>
+                
+                <div class="food-grid" id="foodGrid">
+                    <!-- Food items will be populated by JavaScript -->
+                </div>
+            </main>
+            
+            <aside class="cart-section">
+                <div class="cart-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-shopping-cart"></i> 
+                        Your Order
+                    </h2>
+                    <button class="clear-cart" id="clearCart">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+                
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart" id="emptyCart">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>Your cart is empty. Add some delicious items!</p>
+                    </div>
+                    <!-- Cart items will be added here dynamically -->
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>GST (5%):</span>
+                        <span id="tax">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Packaging Charges:</span>
+                        <span id="delivery">₹10.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total Amount:</span>
+                        <span id="total">₹10.00</span>
+                    </div>
+                </div>
+                
+                <button class="checkout-btn" id="checkoutBtn">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Place Order & Generate Bill
+                </button>
+                
+                <div class="bill-receipt" id="billReceipt">
+                    <div class="receipt-header">
+                        <h3>Muskan Fast Food</h3>
+                        <p>Order Receipt</p>
+                        <p id="receiptDate"></p>
+                        <p>Order ID: #<span id="orderId">12345</span></p>
+                        <div id="userMobileDisplay" class="user-mobile"></div>
+                    </div>
+                    
+                    <div class="receipt-details" id="receiptItems">
+                        <!-- Receipt items will be added here -->
+                    </div>
+                    
+                    <div class="receipt-summary">
+                        <div class="receipt-item">
+                            <span>Subtotal:</span>
+                            <span id="receiptSubtotal">₹0.00</span>
+                        </div>
+                        <div class="receipt-item">
+                            <span>GST (5%):</span>
+                            <span id="receiptTax">₹0.00</span>
+                        </div>
+                        <div class="receipt-item">
+                            <span>Packaging Charges:</span>
+                            <span id="receiptDelivery">₹10.00</span>
+                        </div>
+                        <div class="receipt-total">
+                            <span>Total Amount:</span>
+                            <span id="receiptTotal">₹10.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tokens-earned" id="tokensEarned">
+                        <i class="fas fa-gift"></i>
+                        <span>Congratulations! You've earned 100 Tokens!</span>
+                    </div>
+                    
+                    <div class="receipt-footer">
+                        <p>Thank you for ordering from Muskan Fast Food!</p>
+                        <p class="thank-you">Muskurahat ka swaad, har bite mein!</p>
+                        <p>Your order will be ready in 20-25 minutes.</p>
+                    </div>
+                </div>
+                
+                <div class="order-success" id="orderSuccess">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Order Placed Successfully!</h3>
+                    <p>Your order has been confirmed and will be prepared shortly.</p>
+                    <p>You have earned <strong>100 Tokens</strong> with this order!</p>
+                    <p>Order ID: <strong id="successOrderId"></strong></p>
+                    <p>Estimated Delivery: <strong>25-30 minutes</strong></p>
+                    <button class="checkout-btn" onclick="window.location.reload()" style="margin-top: 20px;">
+                        <i class="fas fa-undo"></i> Place New Order
+                    </button>
+                </div>
+            </aside>
+        </div>
+        
+        <footer>
+            <p>Muskan Fast Food &copy; 2023 | Taste that brings a smile to your face!</p>
+            <p>Contact: +91 98765 43210 | Address: Main Street, Food Plaza, City</p>
+            <p>Tokens can be redeemed on your next purchase!</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // User information
+        let userName = '';
+        let userMobile = '';
+        
+        // Muskan Fast Food items with Indian prices and detailed descriptions
+        const foodItems = [
+            {
+                id: 1,
+                name: "Special Masala Burger",
+                category: "burger",
+                price: 89,
+                description: "Our signature burger with spicy potato patty",
+                details: {
+                    calories: "350-400 kcal",
+                    ingredients: "Potato patty, lettuce, tomato, onions, special masala sauce",
+                    prepTime: "10-12 minutes",
+                    spiceLevel: "Medium",
+                    serving: "1 piece"
+                },
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Best Seller"
+            },
+            {
+                id: 2,
+                name: "Veg Chowmein",
+                category: "chowmein",
+                price: 120,
+                description: "Stir-fried noodles with fresh vegetables",
+                details: {
+                    calories: "400-450 kcal",
+                    ingredients: "Hakka noodles, cabbage, carrots, bell peppers, soy sauce",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "Medium",
+                    serving: "1 plate"
+                },
+                image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Popular"
+            },
+            {
+                id: 3,
+                name: "Veg Manchurian",
+                category: "manchurian",
+                price: 150,
+                description: "Fried vegetable balls in spicy Chinese sauce",
+                details: {
+                    calories: "300-350 kcal",
+                    ingredients: "Mixed vegetables, flour, spices, garlic, ginger, soy sauce",
+                    prepTime: "15-18 minutes",
+                    spiceLevel: "Medium-High",
+                    serving: "8 pieces with gravy"
+                },
+                image: "https://images.unsplash.com/photo-1563379091339-03246963d9d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Chef Special"
+            },
+            {
+                id: 4,
+                name: "Aloo Chaat",
+                category: "chaat",
+                price: 70,
+                description: "Spicy potato chaat with chutneys",
+                details: {
+                    calories: "250-300 kcal",
+                    ingredients: "Potatoes, onions, tomatoes, chutneys, sev, spices",
+                    prepTime: "8-10 minutes",
+                    spiceLevel: "High",
+                    serving: "1 bowl"
+                },
+                image: "https://images.unsplash.com/photo-1589301760014-d929f3979cbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Street Style"
+            },
+            {
+                id: 5,
+                name: "Steamed Momos",
+                category: "momos",
+                price: 100,
+                description: "Steamed dumplings with vegetable filling",
+                details: {
+                    calories: "280-330 kcal",
+                    ingredients: "Flour dough, cabbage, carrots, onions, spices",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "Low-Medium",
+                    serving: "8 pieces with chutney"
+                },
+                image: "https://images.unsplash.com/photo-1626082895612-9e6d8e8c2b1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Customer Favorite"
+            },
+            {
+                id: 6,
+                name: "Cheese Pasta",
+                category: "pasta",
+                price: 130,
+                description: "Pasta in creamy cheese sauce with herbs",
+                details: {
+                    calories: "450-500 kcal",
+                    ingredients: "Penne pasta, cheese, cream, herbs, seasonings",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "Low",
+                    serving: "1 plate"
+                },
+                image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Cheesy Delight"
+            },
+            {
+                id: 7,
+                name: "Paneer Burger",
+                category: "burger",
+                price: 110,
+                description: "Grilled paneer patty with mint chutney",
+                details: {
+                    calories: "380-430 kcal",
+                    ingredients: "Paneer patty, mint chutney, lettuce, tomato, onions",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "Medium",
+                    serving: "1 piece"
+                },
+                image: "https://images.unsplash.com/photo-1553979459-d2229ba7433c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Vegetarian"
+            },
+            {
+                id: 8,
+                name: "Schezwan Chowmein",
+                category: "chowmein",
+                price: 140,
+                description: "Spicy Schezwan style noodles",
+                details: {
+                    calories: "420-470 kcal",
+                    ingredients: "Noodles, Schezwan sauce, vegetables, garlic, chili",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "High",
+                    serving: "1 plate"
+                },
+                image: "https://images.unsplash.com/photo-1612927601601-6638404737ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Spicy"
+            },
+            {
+                id: 9,
+                name: "Gobi Manchurian",
+                category: "manchurian",
+                price: 130,
+                description: "Crispy cauliflower in tangy sauce",
+                details: {
+                    calories: "320-370 kcal",
+                    ingredients: "Cauliflower, flour, spices, Manchurian sauce",
+                    prepTime: "15-18 minutes",
+                    spiceLevel: "Medium",
+                    serving: "8 pieces with gravy"
+                },
+                image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Crispy"
+            },
+            {
+                id: 10,
+                name: "Papdi Chaat",
+                category: "chaat",
+                price: 80,
+                description: "Crisp papdis with yogurt and chutneys",
+                details: {
+                    calories: "270-320 kcal",
+                    ingredients: "Papdi, yogurt, tamarind chutney, mint chutney, spices",
+                    prepTime: "8-10 minutes",
+                    spiceLevel: "Medium",
+                    serving: "1 plate"
+                },
+                image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Classic"
+            },
+            {
+                id: 11,
+                name: "Fried Momos",
+                category: "momos",
+                price: 120,
+                description: "Crispy fried momos with spicy dip",
+                details: {
+                    calories: "350-400 kcal",
+                    ingredients: "Vegetable filling, flour dough, mayonnaise dip",
+                    prepTime: "15-18 minutes",
+                    spiceLevel: "Medium",
+                    serving: "8 pieces with dip"
+                },
+                image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                badge: "Crispy"
+            },
+            {
+                id: 12,
+                name: "Red Sauce Pasta",
+                category: "pasta",
+                price: 125,
+                description: "Pasta in tangy tomato sauce",
+                details: {
+                    calories: "430-480 kcal",
+                    ingredients: "Pasta, tomato sauce, garlic, herbs, seasonings",
+                    prepTime: "12-15 minutes",
+                    spiceLevel: "Low-Medium",
+                    serving: "1 plate
+                     </script>
+</body>
+</html>
